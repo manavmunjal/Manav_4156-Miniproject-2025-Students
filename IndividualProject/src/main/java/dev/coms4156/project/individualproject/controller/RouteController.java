@@ -1,18 +1,27 @@
 package dev.coms4156.project.individualproject.controller;
 
-import org.springframework.web.bind.annotation.*;
-import dev.coms4156.project.individualproject.model.BOOK;
+import dev.coms4156.project.individualproject.model.Book;
+import dev.coms4156.project.individualproject.service.MockApiService;
 import java.util.ArrayList;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.http.*;
-import dev.coms4156.project.individualproject.service.MockAPIService;
-
+/**
+ * Controller for handling API requests related to books and library operations.
+ */
 @RestController
 public class RouteController {
+  /**
+  * This is a reference to the MockApiService which provides access to the mock data.
+   */
+  private final MockApiService mockApiService;
 
-  private final MockAPIService mockApiService;
-
-  public RouteController(MockAPIService mockApiService) {
+  public RouteController(MockApiService mockApiService) {
     this.mockApiService = mockApiService;
   }
 
@@ -33,7 +42,7 @@ public class RouteController {
    */
   @GetMapping({"/book/{id}"})
   public ResponseEntity<?> getBook(@PathVariable int id) {
-    for (BOOK book : mockApiService.getBooks()) {
+    for (Book book : mockApiService.getBooks()) {
       if (book.getId() == id) {
         return new ResponseEntity<>(book, HttpStatus.OK);
       }
@@ -52,19 +61,18 @@ public class RouteController {
   @PutMapping({"/books/available"})
   public ResponseEntity<?> getAvailableBooks() {
     try {
-      ArrayList<BOOK> availableBooks = new ArrayList<>();
+      ArrayList<Book> availableBooks = new ArrayList<>();
 
-      for (BOOK book : mockApiService.getBooks()) {
+      for (Book book : mockApiService.getBooks()) {
         if (book.hasCopies()) {
           availableBooks.add(book);
         }
       }
-
-      return new ResponseEntity<>(mockApiService.getBooks(), HttpStatus.OK);
+      return new ResponseEntity<>(availableBooks, HttpStatus.OK);
     } catch (Exception e) {
       System.err.println(e);
-        return new ResponseEntity<>("Error occurred when getting all available books",
-          HttpStatus.OK);
+      return new ResponseEntity<>("Error occurred when getting all available books",
+       HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -79,17 +87,18 @@ public class RouteController {
   @PatchMapping({"/book/{bookId}/add"})
   public ResponseEntity<?> addCopy(@PathVariable Integer bookId) {
     try {
-      for (BOOK book : mockApiService.getBooks()) {
-        StringBuilder currBookId = new StringBuilder(book.getId());
+      for (Book book : mockApiService.getBooks()) {
         if (bookId.equals(book.getId())) {
           book.addCopy();
           return new ResponseEntity<>(book, HttpStatus.OK);
         }
       }
-
-      return new ResponseEntity<>("Book not found.", HttpStatus.I_AM_A_TEAPOT);
     } catch (Exception e) {
+      System.err.println(e);
+      return new ResponseEntity<>("Error occurred when adding a copy to Book object",
+       HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    return new ResponseEntity<>("Book not found.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
 }
