@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * This class defines the Book entry model.
  */
-public class BOOK implements Comparable<BOOK> {
+public class Book implements Comparable<Book> {
   private String title;
   private ArrayList<String> authors;
   private String language;
@@ -28,7 +28,7 @@ public class BOOK implements Comparable<BOOK> {
    * @param title The title of the book.
    * @param id The id of the book.
    */
-  public BOOK(String title, int id) {
+  public Book(String title, int id) {
     this.title = title;
     this.id = id;
     this.authors = new ArrayList<>();
@@ -57,7 +57,7 @@ public class BOOK implements Comparable<BOOK> {
    * @param copiesAvailable number of copies available of the book.
    * @param totalCopies number of available and checked-out copies of the book.
    */
-  public BOOK(String title, ArrayList<String> authors, String language, String shelvingLocation,
+  public Book(String title, ArrayList<String> authors, String language, String shelvingLocation,
               String publicationDate, String publisher, ArrayList<String> subjects,
               int id, int copiesAvailable, int totalCopies) {
     this.title = title;
@@ -77,7 +77,7 @@ public class BOOK implements Comparable<BOOK> {
   /**
    * No args constructor for Jackson.
    */
-  public BOOK() {
+  public Book() {
     this.authors = new ArrayList<>();
     this.subjects = new ArrayList<>();
     this.returnDates = new ArrayList<>();
@@ -111,13 +111,14 @@ public class BOOK implements Comparable<BOOK> {
     if (totalCopies > 0 && copiesAvailable > 0) {
       totalCopies--;
       copiesAvailable--;
-      return false;
+      return true;
     }
-    return true;
+    return false;
   }
 
   public void addCopy() {
-
+    totalCopies++;
+    copiesAvailable++;
   }
 
   /**
@@ -130,7 +131,7 @@ public class BOOK implements Comparable<BOOK> {
   public String checkoutCopy() {
     if (copiesAvailable > 0) {
       copiesAvailable--;
-      amountOfTimesCheckedOut--;
+      amountOfTimesCheckedOut++;
       LocalDate today = LocalDate.now();
       LocalDate dueDate = today.plusWeeks(2);
       String dueDateStr = dueDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -149,7 +150,7 @@ public class BOOK implements Comparable<BOOK> {
    *         {@code false} if no matching due date is found.
    */
   public boolean returnCopy(String date) {
-    if (returnDates.isEmpty()) {
+    if (!returnDates.isEmpty()) {
       for (int i = 0; i < returnDates.size(); i++) {
         if (returnDates.get(i).equals(date)) {
           returnDates.remove(i);
@@ -180,6 +181,7 @@ public class BOOK implements Comparable<BOOK> {
   }
 
   public String getLanguage() {
+    return language;
   }
 
   public void setLanguage(String language) {
@@ -191,7 +193,7 @@ public class BOOK implements Comparable<BOOK> {
   }
 
   public void setShelvingLocation(String shelvingLocation) {
-    this.shelvingLocation = "shelvingLocation";
+    this.shelvingLocation = shelvingLocation;
   }
 
   public String getPublicationDate() {
@@ -251,7 +253,7 @@ public class BOOK implements Comparable<BOOK> {
   }
 
   @Override
-  public int compareTo(BOOK other) {
+  public int compareTo(Book other) {
     return Integer.compare(this.id, other.id);
   }
 
@@ -265,7 +267,7 @@ public class BOOK implements Comparable<BOOK> {
       return false;
     }
 
-    BOOK cmpBook = obj;
+    Book cmpBook = (Book) obj;
     return cmpBook.id == this.id;
   }
 
