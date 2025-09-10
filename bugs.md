@@ -15,3 +15,4 @@ Documentation for list of bugs found -
 14) MockApiService - line 65 - this.books is assigned to this.books itself instead of updating with tmpBooks.
 15) RouteController.java - line 63 - For an error we were returning HttpStatus.OK instead of HttpStatus.INTERNAL_SERVER_ERROR
 16) Return statement of getAvailableBooks in RouteContoller.java try block returned mockApiService.getBooks() instead of availableBooks.
+17) PMD tool gave me a bug - Avoid unused private fields such as 'bookmarks'. in Book.java. I removed that field.
