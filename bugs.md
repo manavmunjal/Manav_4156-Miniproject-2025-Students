@@ -1,5 +1,5 @@
 Documentation for list of bugs found -
-1) Changed names and references of classes BOOK to Book and MockAPIService to MockApiService respectively.
+1) Changed names and references of classes BOOK to Book, BOOKUnitTests to BookUnitTests and MockAPIService to MockApiService respectively.
 2) deleteCopy method of Book.java had a logical bug and we had to replace true and false return positions for it to logically work.
 3) addCopy method of Book.java had an empty catch block and I added logic to it and accordingly wrote tests for the same.
 4) checkoutCopy method of Book.java had a logical bug where we were intially decreasing the amountOfTimesCheckedOut on every checkout. I corrected the logic and incremented it on every checkout.
