@@ -20,7 +20,6 @@ public class Book implements Comparable<Book> {
   private int copiesAvailable;
   private ArrayList<String> returnDates;
   private int totalCopies;
-  private ArrayList<String> bookmarks;
 
   /**
    * Very basic Book constructor.
